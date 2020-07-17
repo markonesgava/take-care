@@ -9,7 +9,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${cwd}/backend/src/main.go",
+            "program": "${cwd}/backend/cmd/main.go",
             "env": {},
             "args": []
         }

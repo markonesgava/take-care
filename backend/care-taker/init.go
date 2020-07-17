@@ -1,43 +1,17 @@
 package caretaker
 
 import (
-	"fmt"
-
-	"github.com/gofiber/fiber"
+	"github.com/markonesgava/take-care/care-taker/controller"
+	"github.com/markonesgava/take-care/care-taker/routes"
 	"go.uber.org/dig"
 )
 
-type CareTakerController struct {
-}
-
-type ICareTakerController interface {
-	helloTaker(c *fiber.Ctx)
-}
-
-func (CareTakerController) helloTaker(c *fiber.Ctx) {
-	msg := fmt.Sprintf("Hello, %s 👋!", c.Params("name"))
-	c.Send(msg) // => Hello john 👋!
-}
-
-func newController() ICareTakerController {
-	return &CareTakerController{}
-}
-
-type CareTakerRoutes struct {
-}
-
-func newRoute(app *fiber.App, controller ICareTakerController) CareTakerRoutes {
-	app.Get("/taker/:name", controller.helloTaker)
-
-	return CareTakerRoutes{}
-}
-
 func provideControllers(container *dig.Container) error {
-	return container.Provide(newController)
+	return container.Provide(controller.NewController)
 }
 
 func provideRoutes(container *dig.Container) error {
-	return container.Provide(newRoute)
+	return container.Provide(routes.NewRouter)
 }
 
 func ProvideServices(container *dig.Container) error {
