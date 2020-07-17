@@ -26,7 +26,7 @@ func ProvideServices(container *dig.Container) error {
 		return err
 	}
 
-	return container.Invoke(func(_ CareTakerRoutes) {
+	return container.Invoke(func(_ routes.CareTakerRoutes) {
 
 	})
 }
