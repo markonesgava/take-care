@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gofiber/fiber"
 	caretaker "github.com/markonesgava/take-care/care-taker"
+	"github.com/markonesgava/take-care/care-taker/authorization"
 	"go.uber.org/dig"
 )
 
@@ -25,6 +26,12 @@ func main() {
 	}
 
 	err = caretaker.ProvideServices(container)
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = authorization.ProvideServices(container)
 
 	if err != nil {
 		panic(err)
