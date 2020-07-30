@@ -8,9 +8,9 @@ import (
 	"github.com/gofiber/fiber"
 	"go.uber.org/dig"
 
+	"github.com/markonesgava/take-care/config"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
-	"github.com/markonesgava/take-care/config"
 )
 
 const JWTTokenURL = "https://oauth2.googleapis.com/token"
@@ -19,14 +19,9 @@ var (
 	oAuthConfig = oauth2.Config{
 		ClientID:     "",
 		ClientSecret: "",
-		// Scopes:       []string{"all"},
-		RedirectURL: "http://localhost:3900/auth/oauth2",
-		// This points to our Authorization Server
-		// if our Client ID and Client Secret are valid
-		// it will attempt to authorize our user,
-
-		Scopes:   []string{"https://www.googleapis.com/auth/userinfo.email"},
-		Endpoint: google.Endpoint,
+		RedirectURL:  "http://localhost:3900/auth/oauth2",
+		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
+		Endpoint:     google.Endpoint,
 	}
 )
 
@@ -58,14 +53,12 @@ func NewRouter(app *fiber.App, configuration *config.Configuration) Authorizatio
 
 	auth.Get("/", func(c *fiber.Ctx) {
 		url := oAuthConfig.AuthCodeURL(oauthStateString) // TODO change to random value
-		fmt.Printf("Visit the URL for the auth dialog: %v", url)
 		c.Redirect(url, fiber.StatusTemporaryRedirect)
 	})
 
 	auth.Get("/oauth2", func(c *fiber.Ctx) {
 		content, err := getUserInfo(c.FormValue("state"), c.FormValue("code"))
 		if err != nil {
-			fmt.Println(err.Error())
 			c.Redirect("/", http.StatusTemporaryRedirect)
 			return
 		}
