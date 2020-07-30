@@ -10,12 +10,13 @@ import (
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
+	"github.com/markonesgava/take-care/config"
 )
 
 const JWTTokenURL = "https://oauth2.googleapis.com/token"
 
 var (
-	config = oauth2.Config{
+	oAuthConfig = oauth2.Config{
 		ClientID:     "",
 		ClientSecret: "",
 		// Scopes:       []string{"all"},
@@ -49,11 +50,14 @@ func provideRoutes(container *dig.Container) error {
 	return container.Provide(NewRouter)
 }
 
-func NewRouter(app *fiber.App) AuthorizationRoutes {
+func NewRouter(app *fiber.App, configuration *config.Configuration) AuthorizationRoutes {
 	auth := app.Group("/auth")
 
+	oAuthConfig.ClientID = configuration.Google.ClientID
+	oAuthConfig.ClientSecret = configuration.Google.ClientSecret
+
 	auth.Get("/", func(c *fiber.Ctx) {
-		url := config.AuthCodeURL(oauthStateString) // TODO change to random value
+		url := oAuthConfig.AuthCodeURL(oauthStateString) // TODO change to random value
 		fmt.Printf("Visit the URL for the auth dialog: %v", url)
 		c.Redirect(url, fiber.StatusTemporaryRedirect)
 	})
@@ -74,7 +78,7 @@ func getUserInfo(state string, code string) ([]byte, error) {
 	if state != oauthStateString {
 		return nil, fmt.Errorf("invalid oauth state")
 	}
-	token, err := config.Exchange(oauth2.NoContext, code)
+	token, err := oAuthConfig.Exchange(oauth2.NoContext, code)
 	if err != nil {
 		return nil, fmt.Errorf("code exchange failed: %s", err.Error())
 	}

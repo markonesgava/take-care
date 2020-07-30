@@ -2,8 +2,9 @@ package main
 
 import (
 	"github.com/gofiber/fiber"
+	"github.com/markonesgava/take-care/authorization"
 	caretaker "github.com/markonesgava/take-care/care-taker"
-	"github.com/markonesgava/take-care/care-taker/authorization"
+	"github.com/markonesgava/take-care/config"
 	"go.uber.org/dig"
 )
 
@@ -25,6 +26,11 @@ func main() {
 		panic(err)
 	}
 
+	err = config.ProvideServices(container)
+	if err != nil {
+		panic(err)
+	}
+
 	err = caretaker.ProvideServices(container)
 
 	if err != nil {
@@ -36,17 +42,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// app := fiber.New()
 
-	// // GET /john
-	// app.Get("/hello/:name", func(c *fiber.Ctx) {
-	// 	msg := fmt.Sprintf("Hello, %s 👋!", c.Params("name"))
-	// 	c.Send(msg) // => Hello john 👋!
-	// })
-
-	// app.Listen(3900)
-
-	container.Invoke(func(app *fiber.App) {
-		app.Listen(3900)
+	container.Invoke(func(app *fiber.App, configuration *config.Configuration) {
+		app.Listen(configuration.Port)
 	})
 }
