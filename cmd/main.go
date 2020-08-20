@@ -5,6 +5,7 @@ import (
 	"github.com/markonesgava/take-care/authorization"
 	caretaker "github.com/markonesgava/take-care/care-taker"
 	"github.com/markonesgava/take-care/config"
+	"github.com/markonesgava/take-care/mongodb"
 	"go.uber.org/dig"
 )
 
@@ -27,6 +28,12 @@ func main() {
 	}
 
 	err = config.ProvideServices(container)
+	if err != nil {
+		panic(err)
+	}
+
+	err = mongodb.ProvideServices(container)
+
 	if err != nil {
 		panic(err)
 	}

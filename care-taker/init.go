@@ -1,6 +1,7 @@
 package caretaker
 
 import (
+	"github.com/markonesgava/take-care/care-taker/commands"
 	"github.com/markonesgava/take-care/care-taker/controller"
 	"github.com/markonesgava/take-care/care-taker/routes"
 	"go.uber.org/dig"
@@ -14,6 +15,10 @@ func provideRoutes(container *dig.Container) error {
 	return container.Provide(routes.NewRouter)
 }
 
+func provideCommands(container *dig.Container) error {
+	return commands.ProvideCommands(container)
+}
+
 func ProvideServices(container *dig.Container) error {
 	err := provideRoutes(container)
 
@@ -22,6 +27,11 @@ func ProvideServices(container *dig.Container) error {
 	}
 
 	err = provideControllers(container)
+	if err != nil {
+		return err
+	}
+
+	err = provideCommands(container)
 	if err != nil {
 		return err
 	}

@@ -7,8 +7,8 @@ import (
 type SendTakerHello struct {
 }
 
-func NewSendTakerHelloCommandHandler() SendTakerHello {
-	return SendTakerHello{}
+func NewSendTakerHelloCommandHandler() *SendTakerHello {
+	return &SendTakerHello{}
 }
 
 func (c *SendTakerHello) Handle(takerName string) (error, string) {

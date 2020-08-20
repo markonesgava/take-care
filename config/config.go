@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -11,8 +12,9 @@ import (
 )
 
 type Configuration struct {
-	Port   int
-	Google GoogleConfig
+	Port    int
+	Google  GoogleConfig
+	MongoDB MongoDB
 }
 
 type GoogleConfig struct {
@@ -20,27 +22,38 @@ type GoogleConfig struct {
 	ClientSecret string
 }
 
+type MongoDB struct {
+	ConnectionString string
+}
+
 func ProvideServices(container *dig.Container) error {
 	return container.Provide(newConfiguration)
 }
 
 func newConfiguration() *Configuration {
-	err := godotenv.Load("../.env")
+	dir, _ := os.Getwd()
+	log.Printf("base %s", dir)
+
+	err := godotenv.Load(fmt.Sprintf("%s/.env", dir))
 
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Fatalf("Error loading .env file %s", err)
 	}
 
 	port, err := strconv.Atoi(os.Getenv("Port"))
 
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Fatalf("Error on get PORT %s", err)
 	}
+
 	configuration := &Configuration{
 		Port: port,
 		Google: GoogleConfig{
 			ClientID:     os.Getenv("Google_ClientID"),
 			ClientSecret: os.Getenv("Google_ClientSecret"),
+		},
+		MongoDB: MongoDB{
+			ConnectionString: os.Getenv("MongoDB_ConnectionString"),
 		},
 	}
 
