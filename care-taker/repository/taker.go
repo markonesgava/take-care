@@ -2,8 +2,7 @@ package repository
 
 import (
 	"context"
-	"encoding/json"
-	"os"
+	"log"
 	"time"
 
 	"github.com/markonesgava/take-care/care-taker/domain/entities"
@@ -27,12 +26,11 @@ func newTakerMongoDBRepository(connection *mongo.Client) repository.TakerReposit
 }
 
 func (repo *takerMongoDBRepository) Add(taker *entities.Taker) error {
-	// ctx, _ := context.WithTimeout(context.TODO(), time.Second)
-	// result, err := repo.collection.InsertOne(ctx, taker)
+	ctx, _ := context.WithTimeout(context.TODO(), time.Second)
+	result, err := repo.collection.InsertOne(ctx, taker)
 
-	// log.Printf("Result >>>>>>>>>> %s", result.InsertedID.(primitive.ObjectID).Hex())
-	r, err := repo.GetAll()
-	json.NewEncoder(os.Stdout).Encode(r)
+	log.Printf("Result >>>>>>>>>> %s", result.InsertedID.(primitive.ObjectID).Hex())
+
 	return err
 }
 
