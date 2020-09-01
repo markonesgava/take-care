@@ -2,7 +2,8 @@ package controller
 
 import (
 	"github.com/gofiber/fiber"
-	"github.com/markonesgava/take-care/care-taker/commands"
+	"github.com/markonesgava/take-care/domain/commands"
+	"github.com/markonesgava/take-care/domain/queries"
 )
 
 type CareTakerController interface {
@@ -10,9 +11,9 @@ type CareTakerController interface {
 	CreateTaker(c *fiber.Ctx)
 }
 
-func NewController(helloCommand *commands.SendTakerHello, createCommand *commands.CreateTaker) CareTakerController {
+func NewController(commandBusier commands.CommandBusier, queryBusier queries.QueryBusier) CareTakerController {
 	return &careTakerController{
-		createCommand: createCommand,
-		helloCommand:  helloCommand,
+		commandBusier: commandBusier,
+		queryBusier:   queryBusier,
 	}
 }

@@ -2,24 +2,28 @@ package controller
 
 import (
 	"github.com/gofiber/fiber"
-	"github.com/markonesgava/take-care/care-taker/commands"
+
+	careTakerCommands "github.com/markonesgava/take-care/care-taker/domain/commands"
+	careTakerQueries "github.com/markonesgava/take-care/care-taker/domain/queries"
+
+	"github.com/markonesgava/take-care/domain/commands"
+	"github.com/markonesgava/take-care/domain/queries"
 )
 
 type careTakerController struct {
-	helloCommand  *commands.SendTakerHello
-	createCommand *commands.CreateTaker
+	commandBusier commands.CommandBusier
+	queryBusier   queries.QueryBusier
 }
 
 func (ctrl *careTakerController) HelloTaker(c *fiber.Ctx) {
-	// msg := fmt.Sprintf("Hello, %s 👋!", c.Params("name"))
+	query := careTakerQueries.NewGetTakerHello(c.Params("name"))
+	result, _ := ctrl.queryBusier.Send(query)
 
-	_, msg := ctrl.helloCommand.Handle(c.Params("name"))
-	c.Send(msg) // => Hello john 👋!
+	c.Send(result)
 }
 
 func (ctrl *careTakerController) CreateTaker(c *fiber.Ctx) {
-	// msg := fmt.Sprintf("Hello, %s 👋!", c.Params("name"))
-
-	ctrl.createCommand.Handle(c.Params("name"))
-	c.Send("CRIADO!!!") // => Hello john 👋!
+	command := careTakerCommands.NewCreateTaker(c.Params("name"))
+	ctrl.commandBusier.Send(command)
+	c.Send("CRIADO!!!")
 }

@@ -1,41 +1,37 @@
 package commands
 
 import (
-	"context"
 	"fmt"
-	"time"
 
-	"go.mongodb.org/mongo-driver/mongo"
+	takerCommands "github.com/markonesgava/take-care/care-taker/domain/commands"
+	"github.com/markonesgava/take-care/care-taker/domain/entities"
+	"github.com/markonesgava/take-care/care-taker/domain/repository"
+	"github.com/markonesgava/take-care/domain/commands"
 )
 
-type CreateTaker struct {
-	connection *mongo.Client
+type createTakerHandler struct {
+	repository repository.TakerRepository
 }
 
-type Taker struct {
-	Name string
-}
-
-func NewCreateTakerCommandHandler(connection *mongo.Client) *CreateTaker {
-	return &CreateTaker{
-		connection: connection,
+func newCreateTakeHandler(repository repository.TakerRepository) *createTakerHandler {
+	return &createTakerHandler{
+		repository,
 	}
 }
 
-func (c *CreateTaker) Handle(takerName string) error {
-	if len(takerName) == 0 {
-		return fmt.Errorf("TakerName is required")
+func (*createTakerHandler) CommandName() string {
+	return takerCommands.CreateTaker{}.CommandName()
+}
+
+func (handler *createTakerHandler) Handle(command commands.Commander) error {
+	cmd := command.(takerCommands.CreateTaker)
+	if len(cmd.Name()) == 0 {
+		return fmt.Errorf("Taker name is required")
 	}
 
-	taker := Taker{
-		Name: takerName,
-	}
-	collection := c.connection.Database("care-taker").Collection("takers")
+	taker := entities.NewTaker(cmd.Name())
 
-	ctx, _ := context.WithTimeout(context.TODO(), time.Second)
-	result, err := collection.InsertOne(ctx, taker)
-
-	fmt.Printf("result >>> %v", result)
+	err := handler.repository.Add(taker)
 
 	return err
 }

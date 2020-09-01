@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -34,7 +33,7 @@ func newConfiguration() *Configuration {
 	dir, _ := os.Getwd()
 	log.Printf("base %s", dir)
 
-	err := godotenv.Load(fmt.Sprintf("%s/.env", dir))
+	err := godotenv.Load("../.env") // fmt.Sprintf("../.env", dir))
 
 	if err != nil {
 		log.Fatalf("Error loading .env file %s", err)

@@ -5,6 +5,8 @@ import (
 	"github.com/markonesgava/take-care/authorization"
 	caretaker "github.com/markonesgava/take-care/care-taker"
 	"github.com/markonesgava/take-care/config"
+	"github.com/markonesgava/take-care/domain/commands"
+	"github.com/markonesgava/take-care/domain/queries"
 	"github.com/markonesgava/take-care/mongodb"
 	"go.uber.org/dig"
 )
@@ -38,6 +40,18 @@ func main() {
 		panic(err)
 	}
 
+	err = container.Provide(queries.NewQueryBus)
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = container.Provide(commands.NewCommandBus)
+
+	if err != nil {
+		panic(err)
+	}
+
 	err = caretaker.ProvideServices(container)
 
 	if err != nil {
@@ -50,7 +64,14 @@ func main() {
 		panic(err)
 	}
 
-	container.Invoke(func(app *fiber.App, configuration *config.Configuration) {
-		app.Listen(configuration.Port)
+	err = container.Invoke(func(app *fiber.App, configuration *config.Configuration) {
+		err := app.Listen(configuration.Port)
+		if err != nil {
+			panic(err)
+		}
 	})
+
+	if err != nil {
+		panic(err)
+	}
 }

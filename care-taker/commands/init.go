@@ -1,17 +1,21 @@
 package commands
 
 import (
+	"github.com/markonesgava/take-care/domain/commands"
 	"go.uber.org/dig"
 )
 
 func ProvideCommands(container *dig.Container) error {
-	err := container.Provide(NewCreateTakerCommandHandler)
+	err := container.Provide(newCreateTakeHandler)
 
 	if err != nil {
 		return err
 	}
 
-	err = container.Provide(NewSendTakerHelloCommandHandler)
-
-	return err
+	return container.Invoke(func(
+		commandBus commands.CommandBusier,
+		createTakerHandler *createTakerHandler,
+	) {
+		commandBus.Attach(createTakerHandler)
+	})
 }
