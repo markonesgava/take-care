@@ -13,7 +13,7 @@ func ProvideCommands(container *dig.Container) error {
 	}
 
 	return container.Invoke(func(
-		commandBus commands.CommandBusier,
+		commandBus commands.CommandBuser,
 		createTakerHandler *createTakerHandler,
 	) {
 		commandBus.Attach(createTakerHandler)

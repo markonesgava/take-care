@@ -9,10 +9,10 @@ import (
 
 type Aggregate struct {
 	ID            primitive.ObjectID `bson:"_id" json:"id,omitempty"`
-	Enabled       bool               `bson:"enabled,omitempty"`
-	CreatedAt     time.Time          `bson:"createdAt,omitempty"`
-	UpdatedAt     time.Time          `bson:"updatedAt,omitempty"`
-	DeletedAt     time.Time          `bson:"deletedAt,omitempty"`
+	Enabled       bool               `bson:"enabled,omitempty"  json:"enabled,omitempty"`
+	CreatedAt     time.Time          `bson:"createdAt,omitempty"  json:"createdAt,omitempty"`
+	UpdatedAt     time.Time          `bson:"updatedAt,omitempty"  json:"updatedAt,omitempty"`
+	DeletedAt     time.Time          `bson:"deletedAt,omitempty"  json:"deletedAt,omitempty"`
 	pendingEvents []events.Eventer   `bson:-`
 }
 

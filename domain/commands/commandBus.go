@@ -5,15 +5,15 @@ import (
 	"sync"
 )
 
-//CommandBus is a implementation of CommandBusier
+//CommandBus is a implementation of CommandBuser
 type CommandBus struct {
-	CommandBusier
+	CommandBuser
 	mutex           sync.Mutex
 	commandHandlers map[string]CommandHandler
 }
 
 //NewCommandBus create a new Command bus
-func NewCommandBus() CommandBusier {
+func NewCommandBus() CommandBuser {
 	return &CommandBus{
 		commandHandlers: make(map[string]CommandHandler),
 	}
@@ -33,9 +33,9 @@ func (qb *CommandBus) Attach(handler CommandHandler) error {
 }
 
 //Send execute a Command on an attached handle
-func (qb *CommandBus) Send(command Commander) error {
+func (qb *CommandBus) Send(command Commander) (interface{}, error) {
 	if qb.commandHandlers[command.CommandName()] == nil {
-		return fmt.Errorf("no handler attached to %s command", command.CommandName())
+		return nil, fmt.Errorf("no handler attached to %s command", command.CommandName())
 	}
 
 	handler := qb.commandHandlers[command.CommandName()]

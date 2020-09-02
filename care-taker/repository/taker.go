@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/markonesgava/take-care/care-taker/domain/entities"
@@ -29,9 +28,13 @@ func (repo *takerMongoDBRepository) Add(taker *entities.Taker) error {
 	ctx, _ := context.WithTimeout(context.TODO(), time.Second)
 	result, err := repo.collection.InsertOne(ctx, taker)
 
-	log.Printf("Result >>>>>>>>>> %s", result.InsertedID.(primitive.ObjectID).Hex())
+	if err != nil {
+		return err
+	}
 
-	return err
+	taker.ID = result.InsertedID.(primitive.ObjectID)
+
+	return nil
 }
 
 func (repo *takerMongoDBRepository) Update(id primitive.ObjectID, taker *entities.Taker) error {

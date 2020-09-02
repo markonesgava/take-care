@@ -11,9 +11,9 @@ type CareTakerController interface {
 	CreateTaker(c *fiber.Ctx)
 }
 
-func NewController(commandBusier commands.CommandBusier, queryBusier queries.QueryBusier) CareTakerController {
+func NewController(commandBuser commands.CommandBuser, queryBusier queries.QueryBusier) CareTakerController {
 	return &careTakerController{
-		commandBusier: commandBusier,
-		queryBusier:   queryBusier,
+		commandBuser: commandBuser,
+		queryBusier:  queryBusier,
 	}
 }

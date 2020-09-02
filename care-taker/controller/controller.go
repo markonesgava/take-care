@@ -11,8 +11,8 @@ import (
 )
 
 type careTakerController struct {
-	commandBusier commands.CommandBusier
-	queryBusier   queries.QueryBusier
+	commandBuser commands.CommandBuser
+	queryBusier  queries.QueryBusier
 }
 
 func (ctrl *careTakerController) HelloTaker(c *fiber.Ctx) {
@@ -24,6 +24,6 @@ func (ctrl *careTakerController) HelloTaker(c *fiber.Ctx) {
 
 func (ctrl *careTakerController) CreateTaker(c *fiber.Ctx) {
 	command := careTakerCommands.NewCreateTaker(c.Params("name"))
-	ctrl.commandBusier.Send(command)
-	c.Send("CRIADO!!!")
+	taker, _ := ctrl.commandBuser.Send(command)
+	c.JSON(taker)
 }
