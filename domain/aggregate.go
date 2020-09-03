@@ -18,7 +18,7 @@ type Aggregate struct {
 
 func NewAggregate() Aggregate {
 	return Aggregate{
-		ID:        primitive.NewObjectID(),
+		ID:        primitive.NilObjectID,
 		Enabled:   true,
 		CreatedAt: time.Now(),
 	}
