@@ -5,6 +5,7 @@ go 1.13
 require (
 	cloud.google.com/go v0.61.0 // indirect
 	github.com/gofiber/fiber v1.12.5
+	github.com/golang/mock v1.4.4
 	github.com/google/uuid v1.1.2
 	github.com/houstondapaz/cqrs-govscsharp v0.0.0-20191113131404-2b4ca6e105ca
 	github.com/joho/godotenv v1.3.0
